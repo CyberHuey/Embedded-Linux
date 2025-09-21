@@ -1,0 +1,32 @@
+# Define your lab resources and targets. Adjust to your gear.
+exporters:
+local:
+cls: LocalPlace
+
+
+places:
+bench01:
+exporter: local
+resources:
+# Replace with your serial device path
+- SerialPort:
+port: /dev/ttyUSB0
+speed: 115200
+# SSH access to DUT after boot
+- NetworkService:
+address: 10.0.1.101
+username: root
+password: ""
+# Power control (example: APC PDU via SNMP)
+- NetworkPowerPort:
+host: apc-pdu-01.lan
+outlet: 5
+community: public
+
+
+targets:
+rpi4-01:
+resources:
+- Place: bench01
+- ConsoleProtocol: {}
+- Shell: {}
