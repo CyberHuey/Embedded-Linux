@@ -1,0 +1,2 @@
+# Stable symlink for FTDI adapter connected to the DUT
+SUBSYSTEM=="tty", ATTRS{idVendor}=="0403", ATTRS{idProduct}=="6001", SYMLINK+="ttyDUT0"
