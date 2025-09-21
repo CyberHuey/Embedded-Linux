@@ -1,0 +1,7 @@
+ .vs/
+ 
+ # ignore compiled file
+*.pyc
+*.sln
+*.json
+/.vs
