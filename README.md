@@ -30,3 +30,36 @@ Fill in hardware/labgrid.yaml with your PDU, serial port, and DUT IP.
 Run smoke suite:
 
 pytest -q tests/smoke -n auto --maxfail=1 --junitxml=artifacts/junit-smoke.xml
+
+# Embedded Test Lab (Starter)
+
+
+This repository bootstraps a Linux embedded test lab built on pytest and labgrid. It includes serial/power control, SSH shell execution, and smoke/functional/perf test suites.
+
+
+## Prereqs
+- Ubuntu 22.04+ test host
+- Network PDU or smart plug (API/SNMP) OR USB hub controllable via `uhubctl`
+- USB‑UART adapter
+
+
+## Configure
+- Edit `hardware/labgrid.yaml` and `.env` (or set env vars in CI)
+- Create a udev rule to pin your serial device
+
+
+## Run
+```bash
+make venv deps
+make smoke
+
+
+
+---
+
+
+## Notes & Next Steps
+- Replace placeholder IPs, serial ports, and PDU details with your lab values.
+- If you’re not using labgrid’s dispatcher yet, this repo still works standalone via the pytest fixtures.
+- For a device farm, layer in LAVA or labgrid exporter/remote and a results DB (e.g., Influx/Grafana).
+- Add logging shipping (Loki/ELK) and baseline thresholds for perf tests as your data accumulates.

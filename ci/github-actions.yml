@@ -1,0 +1,40 @@
+name: Embedded Test CI
+on:
+ push:
+  branches: [ main ]
+ pull_request:
+  branches: [ main ]
+
+
+jobs:
+ build-and-smoke:
+  runs-on: self-hosted # runner lives on the lab host
+  timeout-minutes: 60
+  steps:
+   - uses: actions/checkout@v4
+   - name: Setup Python
+     uses: actions/setup-python@v5
+     with:
+      python-version: '3.11'
+   - name: Install deps
+     run: |
+      python -m venv .venv
+      . .venv/bin/activate
+      pip install -r requirements.txt
+   - name: Run smoke tests
+     env:
+      POWER_BACKEND: apc_snmp
+      PDU_HOST: ${{ secrets.PDU_HOST }}
+      PDU_OUTLET: ${{ secrets.PDU_OUTLET }}
+      SERIAL_PORT: /dev/ttyUSB0
+      DUT_IP: ${{ secrets.DUT_IP }}
+      SSH_USER: root
+      SSH_PASS: ""
+     run: |
+      . .venv/bin/activate
+      pytest -q tests/smoke --junitxml=artifacts/junit-smoke.xml
+   - name: Upload artifacts
+     uses: actions/upload-artifact@v4
+     with:
+      name: junit-and-logs
+      path: artifacts/
